@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Arrivée du Père Noël 🎅</title>
+
+  <!-- Carte -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <style>
+    body { font-family: Arial; text-align: center; }
+    #map { height: 400px; margin: 10px; }
+  </style>
+</head>
+
+<body>
+  <h2>🎅 Arrivée du Père Noël</h2>
+  <p>Clique sur la carte pour choisir l’endroit</p>
+
+  <input type="time" id="heure">
+  <button onclick="lancer()">Valider</button>
+
+  <div id="map"></div>
+  <p id="info"></p>
+
+<script>
+  const map = L.map('map').setView([48.85, 2.35], 5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+  let marker;
+  let traineau;
+
+  map.on('click', e => {
+    if (marker) map.removeLayer(marker);
+    marker = L.marker(e.latlng).addTo(map);
+    window.destination = e.latlng;
+  });
+
+  function lancer() {
+    if (!window.destination) {
+      alert("Choisis un endroit !");
+      return;
+    }
+
+    document.getElementById("info").innerText =
+      "🎅 Le Père Noël arrivera à " + document.getElementById("heure").value;
+
+    if (traineau) map.removeLayer(traineau);
+    traineau = L.marker([90, 0], {
+      icon: L.icon({
+        iconUrl: "https://i.imgur.com/9zQZz9G.png",
+        iconSize: [40, 40]
+      })
+    }).addTo(map);
+
+    traineau.setLatLng(window.destination);
+  }
+</script>
+</body>
+</html>
